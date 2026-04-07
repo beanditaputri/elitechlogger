@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Data Logger Elitech</title>
+  <!-- Google Fonts: Poppins for text, Material Symbols Outlined for icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js for line charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- SheetJS (xlsx) for Excel export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <!-- Logo (replace "filtrona-logo.png" with your logo file) -->
+    <div class="logo">
+      <img src="filtrona-logo1.png" alt="logo">
+    </div>
+
+    <!-- Menu items -->
+    <div class="menu-item active" onclick="switchView('home')">
+      <span class="material-symbols-outlined">home</span> Home
+    </div>
+    <div class="menu-item" onclick="switchView('analytics')">
+      <span class="material-symbols-outlined">analytics</span> Analytics
+    </div>
+
+    <!-- Filters (visible only in Analytics view) -->
+    <div id="filterControls" class="filter-controls">
+      <!-- Elitech dropdown -->
+      <div class="filter-row">
+        <select id="elitechFilter" class="btn-filter" onchange="updateDashboard()">
+          <option value="">Pilih Elitech</option>
+          <option value="1">Elitech 1</option>
+          <option value="2">Elitech 2</option>
+          <option value="3">Elitech 3</option>
+          <option value="4">Elitech 4</option>
+          <option value="5">Elitech 5</option>
+          <option value="6">Elitech 6</option>
+          <option value="7">Elitech 7</option>
+          <option value="8">Elitech 8</option>
+          <option value="9">Elitech 9</option>
+          <option value="10">Elitech 10</option>
+          <option value="11">Elitech 11</option>
+          <option value="12">Elitech 12</option>
+          <option value="13">Elitech 13</option>
+        </select>
+      </div>
+      <!-- Time multi-select -->
+      <div class="filter-row">
+        <select id="timeFilter" class="btn-filter" multiple onchange="updateDashboard()" title="Tahan Ctrl untuk memilih banyak jam">
+          <option value="07.00">07.00</option>
+          <option value="08.00">08.00</option>
+          <option value="09.00">09.00</option>
+          <option value="10.00">10.00</option>
+          <option value="11.00">11.00</option>
+          <option value="12.00">12.00</option>
+          <option value="13.00">13.00</option>
+          <option value="14.00">14.00</option>
+          <option value="15.00">15.00</option>
+          <option value="16.00">16.00</option>
+          <option value="17.00">17.00</option>
+          <option value="18.00">18.00</option>
+          <option value="19.00">19.00</option>
+          <option value="20.00">20.00</option>
+          <option value="21.00">21.00</option>
+          <option value="22.00">22.00</option>
+          <option value="23.00">23.00</option>
+          <option value="00.00">00.00</option>
+          <option value="01.00">01.00</option>
+          <option value="02.00">02.00</option>
+          <option value="03.00">03.00</option>
+          <option value="04.00">04.00</option>
+          <option value="05.00">05.00</option>
+          <option value="06.00">06.00</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Calendar widget -->
+    <div class="calendar-widget">
+      <div class="calendar-header">
+        <select id="monthSelect" onchange="updateDashboard()">
+          <!-- Month options January (0) through December (11) -->
+          <option value="0">Januari</option>
+          <option value="1">Februari</option>
+          <option value="2">Maret</option>
+          <option value="3">April</option>
+          <option value="4">Mei</option>
+          <option value="5">Juni</option>
+          <option value="6">Juli</option>
+          <option value="7">Agustus</option>
+          <option value="8">September</option>
+          <option value="9">Oktober</option>
+          <option value="10">November</option>
+          <option value="11">Desember</option>
+        </select>
+        <select id="yearSelect" onchange="updateDashboard()">
+          <!-- Year options (adjust as needed) -->
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+          <option value="2029">2029</option>
+          <option value="2030">2030</option>
+          <option value="2031">2031</option>
+          <option value="2032">2032</option>
+          <option value="2033">2033</option>
+          <option value="2034">2034</option>
+          <option value="2035">2035</option>
+        </select>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <!-- Export Data button (hidden on Home) -->
+    <button id="btnExport" class="export-btn" style="display:none" onclick="exportToExcel()">
+      Export Data
+    </button>
+  </div>
+
+  <!-- Main content area -->
+  <div class="main-content">
+    <!-- Page title -->
+    <div class="header-title">DASHBOARD DATA LOGGER ELITECH</div>
+
+    <!-- Home view -->
+    <div id="homeView" class="view-section active">
+      <div class="home-layout">
+        <!-- Left side: Welcome card -->
+        <div class="home-left">
+          <div class="card welcome-card">
+            <h2>SELAMAT DATANG!</h2>
+            <p>Dashboard ini dirancang untuk memvisualisasikan hasil studi pemantauan suhu (Temperature) dan kelembapan (Humidity) yang dicatat menggunakan perangkat Data Logger Elitech. Dashboard ini membantu tim Quality Control dalam menganalisis stabilitas kondisi lingkungan, mengidentifikasi fluktuasi ekstrem, dan memastikan standar penyimpanan objek studi tetap terjaga sesuai parameter yang ditentukan.</p>
+          </div>
+          <div class="location-section">
+            <div class="location-header">Lokasi</div>
+            <div class="location-item">Lab QC</div>
+            <div class="location-item">Ruang PZ Central</div>
+            <div class="location-item">Lemari Retained Sample Capsule</div>
+          </div>
+        </div>
+        <!-- Right side: Usage guide -->
+        <div class="home-right">
+          <div class="card card-guide">
+            <h2>Panduan Penggunaan</h2>
+            <ol>
+              <li><strong>Navigasi Halaman:</strong> Gunakan menu di sisi kiri untuk berpindah antara Home dan Analisis Data (Analytics).</li>
+              <li><strong>Filter Data:</strong> Atur rentang tanggal, bulan, tahun, dan pilih nomor Data Logger Elitech melalui menu kontrol di Analytics.</li>
+              <li><strong>Detail Data:</strong> Arahkan kursor pada titik grafik di Analytics untuk melihat nilai spesifik pada waktu tertentu.</li>
+              <li><strong>Open Google Sheet:</strong> Klik tombol “Open Google Sheet” di Analytics untuk mengisi data melalui Google Sheets.</li>
+              <li><strong>Export Data:</strong> Klik tombol “Export Data” di Analytics untuk mengunduh ringkasan data dalam format Excel.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics view -->
+    <div id="analyticsView" class="view-section">
+      <!-- Scorecards -->
+      <div class="scorecards">
+        <div class="scorecard">Avg. Temp<br><span id="avgTemp">... °C</span></div>
+        <div class="scorecard">Max. Temp<br><span id="maxTemp">... °C</span></div>
+        <div class="scorecard">Min. Temp<br><span id="minTemp">... °C</span></div>
+        <div class="scorecard">Avg. Hum<br><span id="avgHum">... %RH</span></div>
+        <div class="scorecard">Max. Hum<br><span id="maxHum">... %RH</span></div>
+        <div class="scorecard">Min. Hum<br><span id="minHum">... %RH</span></div>
+      </div>
+
+      <!-- Charts with open-sheet buttons -->
+      <div class="chart-container">
+        <div class="chart-column">
+          <div class="chart-header-row">
+            <div class="chart-title-box">Temperature</div>
+            <button class="sheet-btn" onclick="openGoogleSheet()">Open Google Sheet</button>
+          </div>
+          <div class="canvas-wrapper">
+            <canvas id="tempChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-column">
+          <div class="chart-header-row">
+            <div class="chart-title-box">Humidity</div>
+            <button class="sheet-btn" onclick="openGoogleSheet()">Open Google Sheet</button>
+          </div>
+          <div class="canvas-wrapper">
+            <canvas id="humChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data tables -->
+      <div class="data-tables">
+        <div class="data-table-wrapper">
+          <h4>Summary Temperature</h4>
+          <table id="tempTable" class="data-table">
+            <thead>
+              <tr><th>Date</th><th>Time</th><th>Elitech</th><th>E+Elektronik</th><th>Temperature</th><th>Correction</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="data-table-wrapper">
+          <h4>Summary Humidity</h4>
+          <table id="humTable" class="data-table">
+            <thead>
+              <tr><th>Date</th><th>Time</th><th>Elitech</th><th>E+Elektronik</th><th>Humidity</th><th>Correction</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript: functionality for navigation, filters, charts, and export -->
+  <script>
+    // Google Sheet URL placeholder (replace with your actual sheet link)
+    const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1qubyY2Brrfko5udX2c6BkQsh5ouv7PUqwNcOdwSBWn4/edit";
+
+    // Example rawData (replace with actual data from Google Sheets via API)
+    let rawData = [
+      { date: "1", month: "3", year: "2026", time: "07.00", elitech: "1", e_elektronik: 22.5, temp: 23.0, hum: 55, e_hum: 54 },
+      { date: "1", month: "3", year: "2026", time: "16.00", elitech: "1", e_elektronik: 25.0, temp: 25.5, hum: 60, e_hum: 58 },
+      { date: "2", month: "3", year: "2026", time: "08.00", elitech: "1", e_elektronik: 26.5, temp: 24.5, hum: 62, e_hum: 61 },
+      { date: "1", month: "3", year: "2026", time: "17.00", elitech: "2", e_elektronik: 26.0, temp: 25.8, hum: 59, e_hum: 60 },
+      { date: "1", month: "3", year: "2026", time: "18.00", elitech: "2", e_elektronik: 25.0, temp: 24.0, hum: 57, e_hum: 56 }
+    ];
+
+    let currentMode = 'home';
+
+    // Switch between Home and Analytics views
+    function switchView(view) {
+      currentMode = view;
+      document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+
+      if (view === 'home') {
+        document.getElementById('homeView').classList.add('active');
+        document.getElementById('filterControls').style.display = 'none';
+        document.getElementById('btnExport').style.display = 'none';
+      } else {
+        document.getElementById('analyticsView').classList.add('active');
+        document.getElementById('filterControls').style.display = 'flex';
+        document.getElementById('btnExport').style.display = 'block';
+        updateDashboard();  // refresh data display
+      }
+      initCalendar();  // regenerate calendar for current view
+      // Update active menu item
+      document.querySelector(`.menu-item[onclick="switchView('${view}')"]`).classList.add('active');
+    }
+
+    // Initialize calendar days
+    let selectedDays = [];
+    function initCalendar() {
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = '';
+      const today = new Date();
+      const currentDay = today.getDate();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
+
+      // In Home, preselect today and disable selection
+      if (currentMode === 'home') {
+        document.getElementById('monthSelect').value = currentMonth;
+        document.getElementById('yearSelect').value = currentYear;
+        selectedDays = [currentDay];
+      }
+
+      // Render days 1-31
+      for (let i = 1; i <= 31; i++) {
+        const div = document.createElement('div');
+        div.className = 'calendar-day';
+        div.innerText = i;
+        if (selectedDays.includes(i)) {
+          div.classList.add('selected');
+        }
+        // Only allow clicks in Analytics mode
+        div.onclick = () => {
+          if (currentMode === 'analytics') toggleDaySelection(div, i);
+        };
+        grid.appendChild(div);
+      }
+    }
+
+    function toggleDaySelection(element, day) {
+      // Limit to 7 selections
+      if (selectedDays.includes(day)) {
+        selectedDays = selectedDays.filter(d => d !== day);
+        element.classList.remove('selected');
+      } else {
+        if (selectedDays.length < 7) {
+          selectedDays.push(day);
+          element.classList.add('selected');
+        } else {
+          alert("Kamu hanya dapat memilih maksimal 7 hari secara bersamaan.");
+        }
+      }
+      updateDashboard();
+    }
+
+    // Initialize Chart.js charts
+    let chartTemp, chartHum;
+    function initCharts() {
+      const ctxTemp = document.getElementById('tempChart').getContext('2d');
+      const ctxHum = document.getElementById('humChart').getContext('2d');
+      const commonOptions = { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false } } };
+
+      chartTemp = new Chart(ctxTemp, { type: 'line', data: { labels: [], datasets: [] }, options: commonOptions });
+      chartHum = new Chart(ctxHum, { type: 'line', data: { labels: [], datasets: [] }, options: commonOptions });
+    }
+
+    // Update scorecards, charts, and tables based on filters
+    function updateDashboard() {
+      const selElitech = document.getElementById('elitechFilter').value;
+      const selMonth = document.getElementById('monthSelect').value;
+      const selYear = document.getElementById('yearSelect').value;
+      const selTimes = Array.from(document.getElementById('timeFilter').selectedOptions).map(opt => opt.value);
+
+      let filtered = rawData;
+      if (!selElitech) {
+        // No Elitech selected: clear
+        filtered = [];
+      } else {
+        // Filter by Elitech, month, year, days, and times
+        filtered = filtered.filter(d => d.elitech === selElitech && d.month === selMonth && d.year === selYear);
+        if (selectedDays.length) {
+          filtered = filtered.filter(d => selectedDays.includes(parseInt(d.date)));
+        }
+        if (selTimes.length) {
+          filtered = filtered.filter(d => selTimes.includes(d.time));
+        }
+      }
+
+      updateScorecards(filtered);
+      updateCharts(filtered);
+      updateTables(filtered);
+    }
+
+    // Update summary scorecards
+    function updateScorecards(data) {
+      const setText = (id, text) => document.getElementById(id).innerText = text;
+      if (!data.length) {
+        ['avgTemp','maxTemp','minTemp','avgHum','maxHum','minHum'].forEach(id => setText(id, '...'));
+        return;
+      }
+      const vals = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+      const tempVals = data.map(d => d.temp);
+      const humVals = data.map(d => d.hum);
+
+      setText('avgTemp', (vals(tempVals).toFixed(2) + '°C'));
+      setText('maxTemp', (Math.max(...tempVals).toFixed(1) + '°C'));
+      setText('minTemp', (Math.min(...tempVals).toFixed(1) + '°C'));
+      setText('avgHum',  (vals(humVals).toFixed(2) + '%RH'));
+      setText('maxHum',  (Math.max(...humVals).toFixed(1) + '%RH'));
+      setText('minHum',  (Math.min(...humVals).toFixed(1) + '%RH'));
+    }
+
+    // Update Chart.js line charts
+    function updateCharts(data) {
+      const labels = data.map(d => `Tgl ${d.date} - ${d.time}`);
+      chartTemp.data.labels = labels;
+      chartTemp.data.datasets = [
+        { label: 'E+Elektronik', data: data.map(d => d.e_elektronik), borderColor: '#3498db', fill: false, tension: 0.3 },
+        { label: 'Temperature',  data: data.map(d => d.temp),         borderColor: '#e74c3c', fill: false, tension: 0.3 }
+      ];
+      chartTemp.update();
+
+      chartHum.data.labels = labels;
+      chartHum.data.datasets = [
+        { label: 'E+Elektronik', data: data.map(d => d.e_hum),       borderColor: '#3498db', fill: false, tension: 0.3 },
+        { label: 'Humidity',     data: data.map(d => d.hum),         borderColor: '#2ecc71', fill: false, tension: 0.3 }
+      ];
+      chartHum.update();
+    }
+
+    // Populate HTML tables with filtered data
+    function updateTables(data) {
+      const tempBody = document.querySelector('#tempTable tbody');
+      const humBody  = document.querySelector('#humTable tbody');
+      tempBody.innerHTML = '';
+      humBody.innerHTML = '';
+
+      data.forEach(d => {
+        const fullDate = `${d.date}/${parseInt(d.month)+1}/${d.year}`;
+        const tempCorr = (d.e_elektronik - d.temp).toFixed(2);
+        const humCorr  = (d.e_hum - d.hum).toFixed(2);
+        tempBody.innerHTML += `
+          <tr>
+            <td>${fullDate}</td><td>${d.time}</td><td>${d.elitech}</td>
+            <td>${d.e_elektronik}</td><td>${d.temp}</td><td>${tempCorr}</td>
+          </tr>`;
+        humBody.innerHTML += `
+          <tr>
+            <td>${fullDate}</td><td>${d.time}</td><td>${d.elitech}</td>
+            <td>${d.e_hum}</td><td>${d.hum}</td><td>${humCorr}</td>
+          </tr>`;
+      });
+    }
+
+    // Open Google Sheet in new tab
+    function openGoogleSheet() {
+      window.open(GOOGLE_SHEET_URL, '_blank');
+    }
+
+    // Export tables to Excel using SheetJS (xlsx.js)
+    function exportToExcel() {
+      const workbook = XLSX.utils.book_new();
+      // Temperature sheet
+      const wsTemp = XLSX.utils.table_to_sheet(document.getElementById('tempTable'));
+      XLSX.utils.book_append_sheet(workbook, wsTemp, "Data Temperature");
+      // Humidity sheet
+      const wsHum = XLSX.utils.table_to_sheet(document.getElementById('humTable'));
+      XLSX.utils.book_append_sheet(workbook, wsHum, "Data Humidity");
+      // Save file
+      XLSX.writeFile(workbook, "Data_Logger_QC_Export.xlsx");
+    }
+
+    // Initialize charts, calendar, and show Home by default
+    initCharts();
+    initCalendar();
+    switchView('home');
+  </script>
+</body>
+</html>

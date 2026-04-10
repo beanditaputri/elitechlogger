@@ -4,21 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Data Logger Elitech</title>
+
   <!-- Google Fonts: Poppins for text, Material Symbols Outlined for icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
   <!-- Main stylesheet -->
   <link rel="stylesheet" href="style.css">
-  <!-- Chart.js for line charts -->
+
+  <!-- Chart.js (Line Charts)
+       Docs: https://www.chartjs.org/docs/latest/charts/line.html -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- SheetJS (xlsx) for Excel export -->
+
+  <!-- SheetJS (xlsx) for Excel export
+       Docs: https://docs.sheetjs.com/docs/api/write-options/ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
+
 <body>
 
   <!-- Sidebar Navigation -->
   <div class="sidebar">
-    <!-- Logo (replace "filtrona-logo.png" with your logo file) -->
+    <!-- Logo -->
     <div class="logo">
       <img src="filtrona-logo1.png" alt="logo">
     </div>
@@ -35,7 +42,7 @@
     <div id="filterControls" class="filter-controls">
       <!-- Elitech dropdown -->
       <div class="filter-row">
-        <select id="elitechFilter" class="btn-filter" onchange="updateDashboard()">
+        <select id="elitechFilter" class="btn-filter" onchange="onElitechFilterChange()">
           <option value="">Pilih Elitech</option>
           <option value="1">Elitech 1</option>
           <option value="2">Elitech 2</option>
@@ -52,33 +59,34 @@
           <option value="13">Elitech 13</option>
         </select>
       </div>
+
       <!-- Time multi-select -->
       <div class="filter-row">
         <select id="timeFilter" class="btn-filter" multiple onchange="updateDashboard()" title="Tahan Ctrl untuk memilih banyak jam">
-          <option value="07.00">07.00</option>
-          <option value="08.00">08.00</option>
-          <option value="09.00">09.00</option>
-          <option value="10.00">10.00</option>
-          <option value="11.00">11.00</option>
-          <option value="12.00">12.00</option>
-          <option value="13.00">13.00</option>
-          <option value="14.00">14.00</option>
-          <option value="15.00">15.00</option>
-          <option value="16.00">16.00</option>
-          <option value="17.00">17.00</option>
-          <option value="18.00">18.00</option>
-          <option value="19.00">19.00</option>
-          <option value="20.00">20.00</option>
-          <option value="21.00">21.00</option>
-          <option value="22.00">22.00</option>
-          <option value="23.00">23.00</option>
-          <option value="00.00">00.00</option>
-          <option value="01.00">01.00</option>
-          <option value="02.00">02.00</option>
-          <option value="03.00">03.00</option>
-          <option value="04.00">04.00</option>
-          <option value="05.00">05.00</option>
-          <option value="06.00">06.00</option>
+          <option value="07:00:00">07.00</option>
+          <option value="08:00:00">08.00</option>
+          <option value="09:00:00">09.00</option>
+          <option value="10:00:00">10.00</option>
+          <option value="11:00:00">11.00</option>
+          <option value="12:00:00">12.00</option>
+          <option value="13:00:00">13.00</option>
+          <option value="14:00:00">14.00</option>
+          <option value="15:00:00">15.00</option>
+          <option value="16:00:00">16.00</option>
+          <option value="17:00:00">17.00</option>
+          <option value="18:00:00">18.00</option>
+          <option value="19:00:00">19.00</option>
+          <option value="20:00:00">20.00</option>
+          <option value="21:00:00">21.00</option>
+          <option value="22:00:00">22.00</option>
+          <option value="23:00:00">23.00</option>
+          <option value="00:00:00">00.00</option>
+          <option value="01:00:00">01.00</option>
+          <option value="02:00:00">02.00</option>
+          <option value="03:00:00">03.00</option>
+          <option value="04:00:00">04.00</option>
+          <option value="05:00:00">05.00</option>
+          <option value="06:00:00">06.00</option>
         </select>
       </div>
     </div>
@@ -87,7 +95,6 @@
     <div class="calendar-widget">
       <div class="calendar-header">
         <select id="monthSelect" onchange="updateDashboard()">
-          <!-- Month options January (0) through December (11) -->
           <option value="0">Januari</option>
           <option value="1">Februari</option>
           <option value="2">Maret</option>
@@ -102,7 +109,6 @@
           <option value="11">Desember</option>
         </select>
         <select id="yearSelect" onchange="updateDashboard()">
-          <!-- Year options (adjust as needed) -->
           <option value="2024">2024</option>
           <option value="2025">2025</option>
           <option value="2026">2026</option>
@@ -128,13 +134,11 @@
 
   <!-- Main content area -->
   <div class="main-content">
-    <!-- Page title -->
     <div class="header-title">DASHBOARD DATA LOGGER ELITECH</div>
 
     <!-- Home view -->
     <div id="homeView" class="view-section active">
       <div class="home-layout">
-        <!-- Left side: Welcome card -->
         <div class="home-left">
           <div class="card welcome-card">
             <h2>SELAMAT DATANG!</h2>
@@ -147,7 +151,7 @@
             <div class="location-item">Lemari Retained Sample Capsule</div>
           </div>
         </div>
-        <!-- Right side: Usage guide -->
+
         <div class="home-right">
           <div class="card card-guide">
             <h2>Panduan Penggunaan</h2>
@@ -180,7 +184,7 @@
         <div class="chart-column">
           <div class="chart-header-row">
             <div class="chart-title-box">Temperature</div>
-            <button class="sheet-btn" onclick="openGoogleSheet()">Open Google Sheet</button>
+            <button class="sheet-btn" onclick="openGoogleSheetTemp()">Open Google Sheet</button>
           </div>
           <div class="canvas-wrapper">
             <canvas id="tempChart"></canvas>
@@ -189,7 +193,7 @@
         <div class="chart-column">
           <div class="chart-header-row">
             <div class="chart-title-box">Humidity</div>
-            <button class="sheet-btn" onclick="openGoogleSheet()">Open Google Sheet</button>
+            <button class="sheet-btn" onclick="openGoogleSheetHum()">Open Google Sheet</button>
           </div>
           <div class="canvas-wrapper">
             <canvas id="humChart"></canvas>
@@ -223,16 +227,364 @@
 
   <!-- JavaScript: functionality for navigation, filters, charts, and export -->
   <script>
-    // Google Sheet URL placeholder (replace with your actual sheet link)
-    const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1qubyY2Brrfko5udX2c6BkQsh5ouv7PUqwNcOdwSBWn4/edit";
+    /*
+    EXECUTIVE SUMMARY (What changed, where to edit)
 
-    // Example rawData (replace with actual data from Google Sheets via API)
+    ✅ Goal: Populate the two HTML Summary tables from Google Sheets tabs:
+       - Temperature sheet tab:  Summary_Temp
+       - Humidity sheet tab:     Summary_Hum
+
+    ✅ Changes integrated into your original dashboard:
+       1) Added globals:
+          - summaryTempData, summaryHumData
+          - SUMMARY_TEMP_SHEET_NAME='Summary_Temp'
+          - SUMMARY_HUM_SHEET_NAME='Summary_Hum'
+       2) Replaced fetchGoogleSheetRows() with an options-aware version:
+          - supports selecting a specific sheet tab by `sheet=TabName` OR `gid=123`
+          - uses /gviz/tq?tqx=out:json&headers=1 (first row treated as header row)
+          - normalizes Date into {date, month(0-11), year} and Time into HH:MM:SS
+          - parses header labels case-insensitively incl. Indonesian labels ('tanggal','jam','koreksi')
+          Docs:
+            - gid/sheet/headers usage: https://developers.google.com/chart/interactive/docs/spreadsheets
+            - query language (optional tq=...): https://developers.google.com/chart/interactive/docs/querylanguage
+       3) Added loadSummaryTabsForElitech(elitech) and modified onElitechFilterChange()
+          to load BOTH:
+            - rawData (for charts/scorecards) via loadSheetDataForElitech (existing)
+            - summaryTempData/summaryHumData (for Summary tables) via Summary tabs
+       4) Updated updateTables() to render from summaryTempData/summaryHumData and apply existing filters.
+          If "Correction" is not provided by the sheet, it is computed:
+            - Temp correction = e_elektronik - temp
+            - Hum correction  = e_hum - hum
+       5) Fixed bugs:
+          - Chart Temp dataset now uses d.e_elektronik (not d.e_temp)
+          - Time filtering now compares HH:MM:SS values consistently
+
+    📌 Where to add more Elitech devices:
+       - Add URLs here:
+           GOOGLE_SHEET_URL_TEMP_BY_ELITECH['2'] = '...'
+           GOOGLE_SHEET_URL_HUM_BY_ELITECH['2']  = '...'
+       - Optional (recommended if tabs may be renamed):
+           SUMMARY_TEMP_GID_BY_ELITECH['2'] = <gid for Summary_Temp tab in that spreadsheet>
+           SUMMARY_HUM_GID_BY_ELITECH['2']  = <gid for Summary_Hum tab in that spreadsheet>
+
+    ⚠️ CORS / Visibility notes:
+       - Run this dashboard from HTTP(S) (local server or hosted). Running as file:// can trigger browser CORS blocks.
+       - Sheets must be viewable by link for client-side fetching. If private, you’ll need OAuth (Sheets scope) or a proxy such as Apps Script web app.
+       References:
+         - Authorization note & examples: https://developers.google.com/chart/interactive/docs/spreadsheets
+
+    Assumptions:
+       - Summary_Temp and Summary_Hum tabs have a header row on row 1 (headers=1).
+         If your Summary tabs do not have a header row, set headers=0 in fetchGoogleSheetRows() and update parse logic.
+
+    Mapping table (two provided spreadsheets):
+    | Purpose     | Spreadsheet ID                                 | Provided GID     | Summary Tab Constant         |
+    |------------|--------------------------------------------------|------------------|------------------------------|
+    | Temperature| 1lrpLeQxIfNXjO7UOconN-yPz-wtv6hZY1et0MEZhF1Y     | 1345604193       | SUMMARY_TEMP_SHEET_NAME      |
+    | Humidity   | 16CC38SywIaHEdz5j21ErkyHcisS4VXyztNt06L8E2wY     | 1572133315       | SUMMARY_HUM_SHEET_NAME       |
+    */
+
+    // =========================
+    // Google Sheet URL mapping
+    // =========================
+    const GOOGLE_SHEET_URL_TEMP_BY_ELITECH = {
+      '1': "https://docs.google.com/spreadsheets/d/1lrpLeQxIfNXjO7UOconN-yPz-wtv6hZY1et0MEZhF1Y/edit"
+      // Add more Elitech-specific temperature sheet links here
+    };
+    const GOOGLE_SHEET_URL_HUM_BY_ELITECH = {
+      '1': "https://docs.google.com/spreadsheets/d/16CC38SywIaHEdz5j21ErkyHcisS4VXyztNt06L8E2wY/edit"
+      // Add more Elitech-specific humidity sheet links here
+    };
+
+    // Optional per-Elitech Summary tab GIDs (useful if tab names are renamed/misspelled).
+    // (Tab selection is officially supported via gid or sheet name.)
+    const SUMMARY_TEMP_GID_BY_ELITECH = {
+      '1': 1345604193
+    };
+    const SUMMARY_HUM_GID_BY_ELITECH = {
+      '1': 1572133315
+    };
+
+    // Fallback single URLs (kept for compatibility / default behavior)
+    const GOOGLE_SHEET_URL_TEMP = GOOGLE_SHEET_URL_TEMP_BY_ELITECH['1'];
+    const GOOGLE_SHEET_URL_HUM  = GOOGLE_SHEET_URL_HUM_BY_ELITECH['1'];
+
+    // =========================
+    // REQUIRED NEW GLOBALS
+    // =========================
+    let summaryTempData = [];
+    let summaryHumData  = [];
+    const SUMMARY_TEMP_SHEET_NAME = 'Summary_Temp';
+    const SUMMARY_HUM_SHEET_NAME  = 'Summary_Hum';
+
+    // =========================
+    // SCORECARDS FROM GOOGLE SHEETS (NEW)
+    // =========================
+    /*
+      You requested that Analytics scorecards read from these sheet tabs:
+
+      Temperature spreadsheet tabs:
+        - Avg_Temp, Max_Temp, Min_Temp
+      Humidity spreadsheet tabs:
+        - Avg_Hum,  Max_Hum,  Min_Hum
+
+      Robustness logic:
+      - If tab is a table with an Elitech/device column, prefer matching Elitech row.
+      - If no Elitech is selected, prefer an ALL/SEMUA row if present.
+      - If layout differs, fall back to the first numeric cell found anywhere on the tab.
+      - If fetch fails, fall back to JS-computed scorecards from filtered rawData.
+
+      Docs (official):
+      - Google Spreadsheets + /gviz/tq: https://developers.google.com/chart/interactive/docs/spreadsheets
+      - Query language (optional):      https://developers.google.com/chart/interactive/docs/querylanguage
+
+      Local file note:
+      - file:// origins may break fetch(): https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS/Errors/CORSRequestNotHttp
+
+      IMPORTANT:
+      - For client-side fetch to work without OAuth, the sheet must be viewable by link.
+        If private: use OAuth (append access_token) or a server-side proxy (e.g., Apps Script web app).
+    */
+
+    const SCORECARD_SHEET_NAMES = {
+      avgTemp: 'Avg_Temp',
+      maxTemp: 'Max_Temp',
+      minTemp: 'Min_Temp',
+      avgHum:  'Avg_Hum',
+      maxHum:  'Max_Hum',
+      minHum:  'Min_Hum'
+    };
+
+    const SCORECARD_FORMAT = {
+      avgTemp: { decimals: 2, unit: '°C'  },
+      maxTemp: { decimals: 1, unit: '°C'  },
+      minTemp: { decimals: 1, unit: '°C'  },
+      avgHum:  { decimals: 2, unit: '%RH' },
+      maxHum:  { decimals: 1, unit: '%RH' },
+      minHum:  { decimals: 1, unit: '%RH' }
+    };
+
+    // Cache scorecards per (tempUrl|humUrl) so Elitech-specific sheet mappings still work if you add them later.
+    const scorecardCacheByKey = {};
+
+    function getScorecardSheetUrls(selElitech) {
+      const tempUrl = selElitech ? getSheetUrlForElitech(selElitech, 'temp') : GOOGLE_SHEET_URL_TEMP;
+      const humUrl  = selElitech ? getSheetUrlForElitech(selElitech, 'hum')  : GOOGLE_SHEET_URL_HUM;
+      return { tempUrl, humUrl };
+    }
+
+    function makeScorecardCacheKey(tempUrl, humUrl) {
+      return `${tempUrl || ''}||${humUrl || ''}`;
+    }
+
+    function normalizeKey(s) {
+      return String(s ?? '')
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, ' ')
+        .replace(/[^\w%+ ]+/g, '');
+    }
+
+    function coerceNumber(x) {
+      if (x == null || x === '') return NaN;
+      if (typeof x === 'number') return x;
+      const s = String(x).trim().replace(',', '.');
+      const n = parseFloat(s);
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function gvizTableToObjects(json) {
+      const cols = json?.table?.cols || [];
+      const rows = json?.table?.rows || [];
+      const keys = cols.map((c, idx) => normalizeKey(c.label || c.id || `col${idx}`));
+
+      return rows.map(r => {
+        const obj = {};
+        keys.forEach((k, i) => {
+          const cell = r?.c?.[i];
+          obj[k] = cell ? (cell.v ?? cell.f ?? null) : null;
+        });
+        return obj;
+      });
+    }
+
+    function findFirstNumericInGviz(json) {
+      const rows = json?.table?.rows || [];
+      for (const r of rows) {
+        const cells = r?.c || [];
+        for (const cell of cells) {
+          if (!cell) continue;
+          const n = coerceNumber(cell.v ?? cell.f);
+          if (Number.isFinite(n)) return n;
+        }
+      }
+      return null;
+    }
+
+    function pickValueFromObjects(objs, selElitech) {
+      if (!Array.isArray(objs) || objs.length === 0) return null;
+
+      const keys = Object.keys(objs[0] || {});
+      const elitechKey =
+        keys.find(k => k === 'elitech') ||
+        keys.find(k => k.includes('elitech')) ||
+        keys.find(k => k.includes('data logger')) ||
+        keys.find(k => k.includes('device')) ||
+        keys.find(k => k.includes('logger')) ||
+        null;
+
+      const preferredValueKey =
+        keys.find(k => k === 'value') ||
+        keys.find(k => k.includes('value')) ||
+        keys.find(k => k.includes('avg')) ||
+        keys.find(k => k.includes('max')) ||
+        keys.find(k => k.includes('min')) ||
+        keys.find(k => k.includes('temp')) ||
+        keys.find(k => k.includes('humidity')) ||
+        keys.find(k => k.includes('hum')) ||
+        null;
+
+      const numericFromRow = (row) => {
+        if (preferredValueKey) {
+          const n = coerceNumber(row[preferredValueKey]);
+          if (Number.isFinite(n)) return n;
+        }
+        for (const k of keys) {
+          if (k === elitechKey) continue;
+          const n = coerceNumber(row[k]);
+          if (Number.isFinite(n)) return n;
+        }
+        return NaN;
+      };
+
+      const cleanElitech = (x) => String(x ?? '').trim().replace(/^elitech\s*/i, '');
+
+      // Elitech selected → prefer matching row (if table supports it)
+      if (selElitech && elitechKey) {
+        const matchRow = objs.find(o => cleanElitech(o[elitechKey]) === String(selElitech));
+        if (matchRow) {
+          const n = numericFromRow(matchRow);
+          if (Number.isFinite(n)) return n;
+        }
+      }
+
+      // No Elitech selected → prefer ALL/SEMUA if present
+      if (!selElitech && elitechKey) {
+        const allRow = objs.find(o => /^(all|semua)$/i.test(cleanElitech(o[elitechKey])));
+        if (allRow) {
+          const n = numericFromRow(allRow);
+          if (Number.isFinite(n)) return n;
+        }
+      }
+
+      // Otherwise → first row containing a numeric cell
+      for (const row of objs) {
+        const n = numericFromRow(row);
+        if (Number.isFinite(n)) return n;
+      }
+
+      return null;
+    }
+
+    async function fetchGvizJson(sheetUrl, { sheet = null, gid = null, headers = 1, range = 'A1:Z50' } = {}) {
+      const match = sheetUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      if (!match) throw new Error('Invalid Google Sheet URL (missing /d/<id>)');
+      const spreadsheetId = match[1];
+
+      const params = new URLSearchParams();
+      params.set('tqx', 'out:json');
+      params.set('headers', String(headers));
+      if (sheet) params.set('sheet', sheet);
+      else if (gid != null) params.set('gid', String(gid));
+      if (range) params.set('range', range);
+
+      const gvizUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?${params.toString()}`;
+
+      const response = await fetch(gvizUrl);
+      if (!response.ok) throw new Error(`Failed to fetch scorecard tab (${response.status})`);
+
+      const text = await response.text();
+      const jsonText = extractGvizJson(text); // reuse existing helper
+      return JSON.parse(jsonText);
+    }
+
+    async function loadScorecardsFromSheets({ selElitechForRow = null, forceReload = false } = {}) {
+      const { tempUrl, humUrl } = getScorecardSheetUrls(selElitechForRow);
+      const cacheKey = makeScorecardCacheKey(tempUrl, humUrl);
+
+      if (!forceReload && scorecardCacheByKey[cacheKey]?.loaded) return scorecardCacheByKey[cacheKey];
+
+      const cache = scorecardCacheByKey[cacheKey] || {
+        loaded: false,
+        values: { avgTemp: null, maxTemp: null, minTemp: null, avgHum: null, maxHum: null, minHum: null },
+        rows:   { avgTemp: [],   maxTemp: [],   minTemp: [],   avgHum: [],   maxHum: [],   minHum: [] }
+      };
+
+      const fetchTab = async (baseUrl, tabName) => {
+        if (!baseUrl) return { objs: [], scalar: null };
+
+        // Try table-style headers=1 first; fall back to headers=0 for scalar tabs.
+        try {
+          const json = await fetchGvizJson(baseUrl, { sheet: tabName, headers: 1, range: 'A1:Z50' });
+          return { objs: gvizTableToObjects(json), scalar: findFirstNumericInGviz(json) };
+        } catch (e1) {
+          const json = await fetchGvizJson(baseUrl, { sheet: tabName, headers: 0, range: 'A1:Z50' });
+          return { objs: gvizTableToObjects(json), scalar: findFirstNumericInGviz(json) };
+        }
+      };
+
+      const [avgT, maxT, minT, avgH, maxH, minH] = await Promise.all([
+        fetchTab(tempUrl, SCORECARD_SHEET_NAMES.avgTemp),
+        fetchTab(tempUrl, SCORECARD_SHEET_NAMES.maxTemp),
+        fetchTab(tempUrl, SCORECARD_SHEET_NAMES.minTemp),
+        fetchTab(humUrl,  SCORECARD_SHEET_NAMES.avgHum),
+        fetchTab(humUrl,  SCORECARD_SHEET_NAMES.maxHum),
+        fetchTab(humUrl,  SCORECARD_SHEET_NAMES.minHum)
+      ]);
+
+      cache.rows.avgTemp = avgT.objs;
+      cache.rows.maxTemp = maxT.objs;
+      cache.rows.minTemp = minT.objs;
+      cache.rows.avgHum  = avgH.objs;
+      cache.rows.maxHum  = maxH.objs;
+      cache.rows.minHum  = minH.objs;
+
+      cache.values.avgTemp = avgT.scalar;
+      cache.values.maxTemp = maxT.scalar;
+      cache.values.minTemp = minT.scalar;
+      cache.values.avgHum  = avgH.scalar;
+      cache.values.maxHum  = maxH.scalar;
+      cache.values.minHum  = minH.scalar;
+
+      cache.loaded = true;
+      scorecardCacheByKey[cacheKey] = cache;
+      return cache;
+    }
+
+    function formatScore(n, metricId) {
+      const fmt = SCORECARD_FORMAT[metricId] || { decimals: 2, unit: '' };
+      return Number.isFinite(n) ? `${Number(n).toFixed(fmt.decimals)}${fmt.unit}` : '...';
+    }
+
+    function getBestScoreFromCache(cache, metricId, selElitech) {
+      if (!cache?.loaded) return NaN;
+
+      const fromTable = pickValueFromObjects(cache.rows[metricId], selElitech);
+      if (Number.isFinite(fromTable)) return fromTable;
+
+      const fromScalar = cache.values[metricId];
+      if (Number.isFinite(fromScalar)) return fromScalar;
+
+      return NaN;
+    }
+
+    // Example rawData (used for charts/scorecards until Elitech selection loads real data)
     let rawData = [
-      { date: "1", month: "3", year: "2026", time: "07.00", elitech: "1", e_elektronik: 22.5, temp: 23.0, hum: 55, e_hum: 54 },
-      { date: "1", month: "3", year: "2026", time: "16.00", elitech: "1", e_elektronik: 25.0, temp: 25.5, hum: 60, e_hum: 58 },
-      { date: "2", month: "3", year: "2026", time: "08.00", elitech: "1", e_elektronik: 26.5, temp: 24.5, hum: 62, e_hum: 61 },
-      { date: "1", month: "3", year: "2026", time: "17.00", elitech: "2", e_elektronik: 26.0, temp: 25.8, hum: 59, e_hum: 60 },
-      { date: "1", month: "3", year: "2026", time: "18.00", elitech: "2", e_elektronik: 25.0, temp: 24.0, hum: 57, e_hum: 56 }
+      { date: "1", month: "3", year: "2026", time: "07:00:00", elitech: "1", e_elektronik: 22.5, temp: 23.0, hum: 55, e_hum: 54 },
+      { date: "1", month: "3", year: "2026", time: "16:00:00", elitech: "1", e_elektronik: 25.0, temp: 25.5, hum: 60, e_hum: 58 },
+      { date: "2", month: "3", year: "2026", time: "08:00:00", elitech: "1", e_elektronik: 26.5, temp: 24.5, hum: 62, e_hum: 61 },
+      { date: "1", month: "3", year: "2026", time: "17:00:00", elitech: "2", e_elektronik: 26.0, temp: 25.8, hum: 59, e_hum: 60 },
+      { date: "1", month: "3", year: "2026", time: "18:00:00", elitech: "2", e_elektronik: 25.0, temp: 24.0, hum: 57, e_hum: 56 }
     ];
 
     let currentMode = 'home';
@@ -254,6 +606,7 @@
         updateDashboard();  // refresh data display
       }
       initCalendar();  // regenerate calendar for current view
+
       // Update active menu item
       document.querySelector(`.menu-item[onclick="switchView('${view}')"]`).classList.add('active');
     }
@@ -318,48 +671,130 @@
       chartHum = new Chart(ctxHum, { type: 'line', data: { labels: [], datasets: [] }, options: commonOptions });
     }
 
-    // Update scorecards, charts, and tables based on filters
+    // =========================
+    // Elitech selection handler
+    // =========================
+    async function onElitechFilterChange() {
+      const selElitech = document.getElementById('elitechFilter').value;
+      if (!selElitech) {
+        summaryTempData = [];
+        summaryHumData = [];
+        updateDashboard(); // scorecards still show from sheet (no selection) if loaded
+        return;
+      }
+
+      try {
+        // Load both:
+        // 1) rawData (for charts/scorecards fallback)
+        // 2) summaryTempData/summaryHumData (for summary tables)
+        // 3) scorecards tabs (cached; supports Elitech-specific sheet URL mappings)
+        await Promise.all([
+          loadSheetDataForElitech(selElitech),
+          loadSummaryTabsForElitech(selElitech),
+          loadScorecardsFromSheets({ selElitechForRow: selElitech })
+        ]);
+      } catch (error) {
+        console.warn('Gagal memuat data Google Sheet:', error);
+      }
+
+      updateDashboard();
+    }
+
+    // =========================
+    // Dashboard update pipeline
+    // =========================
     function updateDashboard() {
       const selElitech = document.getElementById('elitechFilter').value;
-      const selMonth = document.getElementById('monthSelect').value;
+      const selMonth = document.getElementById('monthSelect').value; // 0-11
       const selYear = document.getElementById('yearSelect').value;
-      const selTimes = Array.from(document.getElementById('timeFilter').selectedOptions).map(opt => opt.value);
+      const selTimes = Array.from(document.getElementById('timeFilter').selectedOptions).map(opt => opt.value); // HH:MM:SS
 
       let filtered = rawData;
+
       if (!selElitech) {
-        // No Elitech selected: clear
+        // No Elitech selected: clear charts/tables, BUT scorecards should still show from sheets.
         filtered = [];
       } else {
         // Filter by Elitech, month, year, days, and times
-        filtered = filtered.filter(d => d.elitech === selElitech && d.month === selMonth && d.year === selYear);
+        filtered = filtered.filter(d => {
+          if (String(d.elitech) !== String(selElitech)) return false;
+          // If month/year fields exist, enforce them; otherwise skip check
+          if (d.month != null && d.year != null) {
+            return (String(d.month) === String(selMonth) && String(d.year) === String(selYear));
+          }
+          return true;
+        });
+
         if (selectedDays.length) {
-          filtered = filtered.filter(d => selectedDays.includes(parseInt(d.date)));
+          filtered = filtered.filter(d => selectedDays.includes(parseInt(d.date, 10)));
         }
+
         if (selTimes.length) {
-          filtered = filtered.filter(d => selTimes.includes(d.time));
+          // Ensure time filter values match normalized HH:MM:SS
+          filtered = filtered.filter(d => selTimes.includes(String(d.time)));
         }
       }
 
       updateScorecards(filtered);
       updateCharts(filtered);
-      updateTables(filtered);
+      updateTables(filtered); // updateTables() uses summaryTempData/summaryHumData internally
     }
 
-    // Update summary scorecards
+    // =========================
+    // Update summary scorecards (MODIFIED)
+    // =========================
     function updateScorecards(data) {
       const setText = (id, text) => document.getElementById(id).innerText = text;
-      if (!data.length) {
+      const selElitech = document.getElementById('elitechFilter').value || null;
+
+      // 1) Prefer sheet-backed scorecards (works even if data=[] and no Elitech selected)
+      const { tempUrl, humUrl } = getScorecardSheetUrls(selElitech);
+      const activeKey = makeScorecardCacheKey(tempUrl, humUrl);
+      const defaultKey = makeScorecardCacheKey(GOOGLE_SHEET_URL_TEMP, GOOGLE_SHEET_URL_HUM);
+
+      const activeCache = scorecardCacheByKey[activeKey]?.loaded
+        ? scorecardCacheByKey[activeKey]
+        : (scorecardCacheByKey[defaultKey]?.loaded ? scorecardCacheByKey[defaultKey] : null);
+
+      if (activeCache?.loaded) {
+        const avgT = getBestScoreFromCache(activeCache, 'avgTemp', selElitech);
+        const maxT = getBestScoreFromCache(activeCache, 'maxTemp', selElitech);
+        const minT = getBestScoreFromCache(activeCache, 'minTemp', selElitech);
+        const avgH = getBestScoreFromCache(activeCache, 'avgHum',  selElitech);
+        const maxH = getBestScoreFromCache(activeCache, 'maxHum',  selElitech);
+        const minH = getBestScoreFromCache(activeCache, 'minHum',  selElitech);
+
+        if ([avgT, maxT, minT, avgH, maxH, minH].some(Number.isFinite)) {
+          setText('avgTemp', formatScore(avgT, 'avgTemp'));
+          setText('maxTemp', formatScore(maxT, 'maxTemp'));
+          setText('minTemp', formatScore(minT, 'minTemp'));
+          setText('avgHum',  formatScore(avgH, 'avgHum'));
+          setText('maxHum',  formatScore(maxH, 'maxHum'));
+          setText('minHum',  formatScore(minH, 'minHum'));
+          return;
+        }
+      } else {
+        // If not loaded yet, start loading asynchronously (do not block UI).
+        // Once loaded, repaint the dashboard so scorecards appear.
+        loadScorecardsFromSheets({ selElitechForRow: selElitech })
+          .then(() => updateDashboard())
+          .catch(err => console.warn('Scorecards failed to load (fallback to JS-computed):', err));
+      }
+
+      // 2) Fallback: original JS-computed scorecards (only if there is filtered data)
+      if (!Array.isArray(data) || !data.length) {
         ['avgTemp','maxTemp','minTemp','avgHum','maxHum','minHum'].forEach(id => setText(id, '...'));
         return;
       }
-      const vals = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
-      const tempVals = data.map(d => d.temp);
-      const humVals = data.map(d => d.hum);
 
-      setText('avgTemp', (vals(tempVals).toFixed(2) + '°C'));
+      const avg = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+      const tempVals = data.map(d => Number(d.temp || 0));
+      const humVals  = data.map(d => Number(d.hum || 0));
+
+      setText('avgTemp', (avg(tempVals).toFixed(2) + '°C'));
       setText('maxTemp', (Math.max(...tempVals).toFixed(1) + '°C'));
       setText('minTemp', (Math.min(...tempVals).toFixed(1) + '°C'));
-      setText('avgHum',  (vals(humVals).toFixed(2) + '%RH'));
+      setText('avgHum',  (avg(humVals).toFixed(2) + '%RH'));
       setText('maxHum',  (Math.max(...humVals).toFixed(1) + '%RH'));
       setText('minHum',  (Math.min(...humVals).toFixed(1) + '%RH'));
     }
@@ -367,6 +802,8 @@
     // Update Chart.js line charts
     function updateCharts(data) {
       const labels = data.map(d => `Tgl ${d.date} - ${d.time}`);
+
+      // BUG FIX: use e_elektronik, not e_temp
       chartTemp.data.labels = labels;
       chartTemp.data.datasets = [
         { label: 'E+Elektronik', data: data.map(d => d.e_elektronik), borderColor: '#3498db', fill: false, tension: 0.3 },
@@ -376,58 +813,536 @@
 
       chartHum.data.labels = labels;
       chartHum.data.datasets = [
-        { label: 'E+Elektronik', data: data.map(d => d.e_hum),       borderColor: '#3498db', fill: false, tension: 0.3 },
-        { label: 'Humidity',     data: data.map(d => d.hum),         borderColor: '#2ecc71', fill: false, tension: 0.3 }
+        { label: 'E+Elektronik', data: data.map(d => d.e_hum), borderColor: '#3498db', fill: false, tension: 0.3 },
+        { label: 'Humidity',     data: data.map(d => d.hum),   borderColor: '#2ecc71', fill: false, tension: 0.3 }
       ];
       chartHum.update();
     }
 
-    // Populate HTML tables with filtered data
-    function updateTables(data) {
+    // =========================
+    // Summary tables rendering
+    // =========================
+    function filterByControls(data, selElitech, selMonth, selYear, selTimes) {
+      let out = Array.isArray(data) ? data.slice() : [];
+
+      // Elitech
+      out = out.filter(d => String(d.elitech) === String(selElitech));
+
+      // Month / Year
+      out = out.filter(d => {
+        if (d.month != null && d.year != null) {
+          return (String(d.month) === String(selMonth) && String(d.year) === String(selYear));
+        }
+        return true;
+      });
+
+      // Days
+      if (selectedDays.length) {
+        out = out.filter(d => selectedDays.includes(parseInt(d.date, 10)));
+      }
+
+      // Times (HH:MM:SS)
+      if (selTimes.length) {
+        out = out.filter(d => selTimes.includes(String(d.time)));
+      }
+
+      return out;
+    }
+
+    // Populate HTML tables using Summary_* tabs data
+    function updateTables(_ignored) {
+      const selElitech = document.getElementById('elitechFilter').value;
+      const selMonth = document.getElementById('monthSelect').value;
+      const selYear = document.getElementById('yearSelect').value;
+      const selTimes = Array.from(document.getElementById('timeFilter').selectedOptions).map(opt => opt.value);
+
       const tempBody = document.querySelector('#tempTable tbody');
       const humBody  = document.querySelector('#humTable tbody');
       tempBody.innerHTML = '';
       humBody.innerHTML = '';
 
-      data.forEach(d => {
-        const fullDate = `${d.date}/${parseInt(d.month)+1}/${d.year}`;
-        const tempCorr = (d.e_elektronik - d.temp).toFixed(2);
-        const humCorr  = (d.e_hum - d.hum).toFixed(2);
+      if (!selElitech) return;
+
+      const tempRows = filterByControls(summaryTempData, selElitech, selMonth, selYear, selTimes);
+      const humRows  = filterByControls(summaryHumData,  selElitech, selMonth, selYear, selTimes);
+
+      tempRows.forEach(d => {
+        const fullDate = `${d.date}/${parseInt(d.month, 10) + 1}/${d.year}`;
+        const corr = (Number.isFinite(d.correction))
+          ? Number(d.correction).toFixed(2)
+          : (Number(d.e_elektronik || 0) - Number(d.temp || 0)).toFixed(2);
+
         tempBody.innerHTML += `
           <tr>
-            <td>${fullDate}</td><td>${d.time}</td><td>${d.elitech}</td>
-            <td>${d.e_elektronik}</td><td>${d.temp}</td><td>${tempCorr}</td>
+            <td>${fullDate}</td>
+            <td>${d.time}</td>
+            <td>${d.elitech}</td>
+            <td>${d.e_elektronik ?? ''}</td>
+            <td>${d.temp ?? ''}</td>
+            <td>${corr}</td>
           </tr>`;
+      });
+
+      humRows.forEach(d => {
+        const fullDate = `${d.date}/${parseInt(d.month, 10) + 1}/${d.year}`;
+        const corr = (Number.isFinite(d.correction))
+          ? Number(d.correction).toFixed(2)
+          : (Number(d.e_hum || 0) - Number(d.hum || 0)).toFixed(2);
+
         humBody.innerHTML += `
           <tr>
-            <td>${fullDate}</td><td>${d.time}</td><td>${d.elitech}</td>
-            <td>${d.e_hum}</td><td>${d.hum}</td><td>${humCorr}</td>
+            <td>${fullDate}</td>
+            <td>${d.time}</td>
+            <td>${d.elitech}</td>
+            <td>${d.e_hum ?? ''}</td>
+            <td>${d.hum ?? ''}</td>
+            <td>${corr}</td>
           </tr>`;
       });
     }
 
-    // Open Google Sheet in new tab
-    function openGoogleSheet() {
-      window.open(GOOGLE_SHEET_URL, '_blank');
+    // =========================
+    // Sheet URL helpers
+    // =========================
+    function getSheetUrlForElitech(elitech, type) {
+      if (type === 'temp') {
+        return GOOGLE_SHEET_URL_TEMP_BY_ELITECH[elitech] || GOOGLE_SHEET_URL_TEMP;
+      }
+      return GOOGLE_SHEET_URL_HUM_BY_ELITECH[elitech] || GOOGLE_SHEET_URL_HUM;
     }
 
-    // Export tables to Excel using SheetJS (xlsx.js)
-    function exportToExcel() {
+    function openGoogleSheetTemp() {
+      const selElitech = document.getElementById('elitechFilter').value;
+      const url = getSheetUrlForElitech(selElitech, 'temp');
+      if (!url) {
+        alert('Silakan pilih Elitech terlebih dahulu atau tambahkan link Google Sheet untuk Elitech ini.');
+        return;
+      }
+      window.open(url, '_blank');
+    }
+
+    function openGoogleSheetHum() {
+      const selElitech = document.getElementById('elitechFilter').value;
+      const url = getSheetUrlForElitech(selElitech, 'hum');
+      if (!url) {
+        alert('Silakan pilih Elitech terlebih dahulu atau tambahkan link Google Sheet untuk Elitech ini.');
+        return;
+      }
+      window.open(url, '_blank');
+    }
+
+    // =========================
+    // Data loaders (existing + new)
+    // =========================
+    async function loadSheetDataForElitech(elitech) {
+      const tempUrl = getSheetUrlForElitech(elitech, 'temp');
+      const humUrl  = getSheetUrlForElitech(elitech, 'hum');
+
+      const [tempRows, humRows] = await Promise.all([
+        tempUrl ? fetchGoogleSheetRows(tempUrl, { isHumSheet: false }) : Promise.resolve([]),
+        humUrl  ? fetchGoogleSheetRows(humUrl,  { isHumSheet: true  }) : Promise.resolve([])
+      ]);
+
+      // Merge on (date,month,year,time,elitech) to reconstruct rawData
+      const merged = {};
+      tempRows.forEach(row => {
+        const key = `${row.date}|${row.month}|${row.year}|${row.time}|${row.elitech}`;
+        merged[key] = { ...merged[key], ...row };
+      });
+      humRows.forEach(row => {
+        const key = `${row.date}|${row.month}|${row.year}|${row.time}|${row.elitech}`;
+        merged[key] = { ...merged[key], ...row };
+      });
+
+      const loadedData = Object.values(merged);
+      if (loadedData.length) {
+        rawData = loadedData;
+      }
+    }
+
+    // NEW: load Summary_Temp and Summary_Hum tabs for tables
+    async function loadSummaryTabsForElitech(elitech) {
+      const tempUrl = getSheetUrlForElitech(elitech, 'temp');
+      const humUrl  = getSheetUrlForElitech(elitech, 'hum');
+
+      const tempGid = SUMMARY_TEMP_GID_BY_ELITECH[elitech];
+      const humGid  = SUMMARY_HUM_GID_BY_ELITECH[elitech];
+
+      // Prefer sheet name (stable across spreadsheet copies), fallback to gid if mapping exists.
+      // Official docs: gid / sheet / headers parameters:
+      // https://developers.google.com/chart/interactive/docs/spreadsheets
+      let tempRows = [];
+      let humRows  = [];
+
+      if (tempUrl) {
+        tempRows = await fetchGoogleSheetRows(tempUrl, {
+          isHumSheet: false,
+          sheet: SUMMARY_TEMP_SHEET_NAME
+        });
+
+        if (!tempRows.length && Number.isFinite(tempGid)) {
+          tempRows = await fetchGoogleSheetRows(tempUrl, {
+            isHumSheet: false,
+            gid: tempGid
+          });
+        }
+      }
+
+      if (humUrl) {
+        humRows = await fetchGoogleSheetRows(humUrl, {
+          isHumSheet: true,
+          sheet: SUMMARY_HUM_SHEET_NAME
+        });
+
+        if (!humRows.length && Number.isFinite(humGid)) {
+          humRows = await fetchGoogleSheetRows(humUrl, {
+            isHumSheet: true,
+            gid: humGid
+          });
+        }
+      }
+
+      summaryTempData = tempRows;
+      summaryHumData  = humRows;
+    }
+
+    // =========================
+    // GViz Fetch + Parse (REPLACED)
+    // =========================
+    function extractGvizJson(text) {
+      // Typical response shape:
+      // /*O_o*/ google.visualization.Query.setResponse({...});
+      const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);?\s*$/);
+      if (match && match[1]) return match[1];
+
+      // Fallback: take substring between first { and last }
+      const first = text.indexOf('{');
+      const last = text.lastIndexOf('}');
+      if (first >= 0 && last >= 0 && last > first) return text.slice(first, last + 1);
+
+      throw new Error('Unable to parse GViz response');
+    }
+
+    // Options-aware fetcher:
+    // - supports `sheet=TabName` or `gid=123`
+    // - uses headers=1 (assumes row 1 is header labels)
+    // - normalizes date/time
+    async function fetchGoogleSheetRows(sheetUrl, options = {}) {
+      const {
+        isHumSheet = false,
+        sheet = null,
+        gid = null,
+        headers = 1
+      } = options;
+
+      const match = sheetUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      if (!match) return [];
+      const spreadsheetId = match[1];
+
+      const params = new URLSearchParams();
+      params.set('tqx', 'out:json');
+      params.set('headers', String(headers));
+
+      // When selecting a specific tab in a multi-tab spreadsheet:
+      // - gid=N OR sheet=SheetName are both supported by official docs:
+      //   https://developers.google.com/chart/interactive/docs/spreadsheets
+      if (sheet) params.set('sheet', sheet);
+      else if (gid != null) params.set('gid', String(gid));
+
+      const gvizUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?${params.toString()}`;
+
+      // NOTE: This requires the sheet to be viewable by the browser (public or authorized).
+      // If private, you need OAuth or a server-side proxy (e.g., Apps Script web app).
+      const response = await fetch(gvizUrl);
+      if (!response.ok) throw new Error(`Failed to fetch sheet data (${response.status})`);
+
+      const text = await response.text();
+      const jsonText = extractGvizJson(text);
+      const json = JSON.parse(jsonText);
+
+      return parseGvizTable(json, { isHumSheet });
+    }
+
+    // =========================
+    // Normalization helpers (REQUIRED)
+    // =========================
+    function normalizeTimeToHHMMSS(value, formattedValue = '') {
+      if (value == null || value === '') return '';
+
+      // GViz date/time sometimes encoded as "Date(1899,11,30,7,0,0)"
+      if (typeof value === 'string') {
+        const m = value.match(/^Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)$/);
+        if (m) {
+          const hh = String(m[4]).padStart(2, '0');
+          const mm = String(m[5]).padStart(2, '0');
+          const ss = String(m[6]).padStart(2, '0');
+          return `${hh}:${mm}:${ss}`;
+        }
+      }
+
+      // GViz time-of-day can be a fraction of a day as a number
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        const totalSeconds = Math.round(value * 24 * 60 * 60);
+        const hh = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const mm = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const ss = String(totalSeconds % 60).padStart(2, '0');
+        return `${hh}:${mm}:${ss}`;
+      }
+
+      const s = String(value).trim();
+
+      // "07.00" -> "07:00:00"
+      if (s.includes('.') && !s.includes(':')) {
+        const [h, m = '00', sec = '00'] = s.split('.');
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      }
+
+      // "07:00" -> "07:00:00" ; "07:00:00" stays
+      if (s.includes(':')) {
+        const parts = s.split(':').map(x => x.trim());
+        const hh = String(parts[0] || '00').padStart(2, '0');
+        const mm = String(parts[1] || '00').padStart(2, '0');
+        const ss = String(parts[2] || '00').padStart(2, '0');
+        return `${hh}:${mm}:${ss}`;
+      }
+
+      // Try formatted value if value is not parseable
+      if (formattedValue) {
+        return normalizeTimeToHHMMSS(String(formattedValue).trim(), '');
+      }
+
+      // fallback: "7" -> "07:00:00"
+      if (/^\d{1,2}$/.test(s)) {
+        return `${s.padStart(2, '0')}:00:00`;
+      }
+
+      return '';
+    }
+
+    function normalizeDateParts(value, formattedValue = '') {
+      if (value == null || value === '') return null;
+
+      // GViz date is often encoded as "Date(2026,3,1)" (month is 0-based)
+      if (typeof value === 'string') {
+        const m = value.match(/^Date\((\d+),(\d+),(\d+)\)$/);
+        if (m) {
+          const yyyy = String(m[1]);
+          const mm0  = String(m[2]); // already 0-based
+          const dd   = String(m[3]);
+          return { date: dd, month: mm0, year: yyyy };
+        }
+      }
+
+      // Try native Date parsing
+      const tryParse = (x) => {
+        const d = new Date(x);
+        if (!Number.isNaN(d.getTime())) {
+          return {
+            date: String(d.getDate()),
+            month: String(d.getMonth()), // 0-11
+            year: String(d.getFullYear())
+          };
+        }
+        return null;
+      };
+
+      const parsed = tryParse(value);
+      if (parsed) return parsed;
+
+      // Fallback to formatted value (often shown as dd/mm/yyyy in GViz)
+      if (formattedValue) {
+        // Try: dd/mm/yyyy or dd-mm-yyyy or dd.mm.yyyy
+        const s = String(formattedValue).trim();
+        const m2 = s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+        if (m2) {
+          const dd = parseInt(m2[1], 10);
+          const mm = parseInt(m2[2], 10) - 1;
+          const yyyy = parseInt(m2[3], 10);
+          const d = new Date(yyyy, mm, dd);
+          if (!Number.isNaN(d.getTime())) {
+            return { date: String(dd), month: String(mm), year: String(yyyy) };
+          }
+        }
+
+        const parsed2 = tryParse(s);
+        if (parsed2) return parsed2;
+      }
+
+      return null;
+    }
+
+    // =========================
+    // GViz table parser (REQUIRED)
+    // =========================
+    function parseGvizTable(json, { isHumSheet = false } = {}) {
+      if (!json || !json.table || !Array.isArray(json.table.rows) || !Array.isArray(json.table.cols)) return [];
+
+      const normalizeHeader = (h) =>
+        String(h || '')
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, ' ');
+
+      const isOneOf = (label, arr) => arr.includes(label);
+      const containsAny = (label, arr) => arr.some(x => label.includes(x));
+
+      return json.table.rows.map(row => {
+        const item = {};
+
+        json.table.cols.forEach((col, idx) => {
+          const label = normalizeHeader(col.label || col.id || '');
+          const cell = row.c ? row.c[idx] : null;
+          const v = cell && cell.v != null ? cell.v : '';
+          const f = cell && cell.f != null ? cell.f : '';
+
+          // Date normalization
+          if (isOneOf(label, ['date', 'tanggal', 'tgl'])) {
+            const parts = normalizeDateParts(v, f);
+            if (parts) Object.assign(item, parts);
+          }
+
+          // Support separate date parts if present
+          else if (isOneOf(label, ['month', 'bulan'])) {
+            // Convert 1-12 to 0-11 if needed
+            const n = parseInt(v, 10);
+            if (Number.isFinite(n)) {
+              item.month = String((n >= 1 && n <= 12) ? (n - 1) : n);
+            }
+          } else if (isOneOf(label, ['year', 'tahun'])) {
+            const n = parseInt(v, 10);
+            if (Number.isFinite(n)) item.year = String(n);
+          } else if (isOneOf(label, ['day', 'hari'])) {
+            const n = parseInt(v, 10);
+            if (Number.isFinite(n)) item.date = String(n);
+          }
+
+          // Time normalization
+          else if (isOneOf(label, ['time', 'jam', 'waktu'])) {
+            item.time = normalizeTimeToHHMMSS(v, f);
+          }
+
+          // Elitech
+          else if (containsAny(label, ['elitech', 'data logger', 'logger', 'device'])) {
+            const s = String(v).trim();
+            item.elitech = s.replace(/^elitech\s*/i, '');
+          }
+
+          // E+Elektronik
+          else if (containsAny(label, ['e+elektronik', 'e elektronik', 'e_elektronik', 'e+ elektronik'])) {
+            const n = parseFloat(v);
+            if (isHumSheet) item.e_hum = Number.isFinite(n) ? n : (item.e_hum ?? 0);
+            else item.e_elektronik = Number.isFinite(n) ? n : (item.e_elektronik ?? 0);
+          }
+
+          // Temperature
+          else if (containsAny(label, ['temperature', 'temp', 'suhu'])) {
+            const n = parseFloat(v);
+            item.temp = Number.isFinite(n) ? n : (item.temp ?? 0);
+          }
+
+          // Humidity
+          else if (containsAny(label, ['humidity', 'hum', 'kelembapan', '%rh', 'rh'])) {
+            const n = parseFloat(v);
+            item.hum = Number.isFinite(n) ? n : (item.hum ?? 0);
+          }
+
+          // Explicit E Hum column (if exists)
+          else if (containsAny(label, ['e_hum', 'e humidity', 'e+hum'])) {
+            const n = parseFloat(v);
+            item.e_hum = Number.isFinite(n) ? n : (item.e_hum ?? 0);
+          }
+
+          // Correction / Koreksi
+          else if (containsAny(label, ['correction', 'koreksi'])) {
+            const n = parseFloat(v);
+            item.correction = Number.isFinite(n) ? n : item.correction;
+          }
+        });
+
+        // Minimal row validity (needed by your merge + filters)
+        return item;
+      }).filter(item => item.date && item.time && item.elitech);
+    }
+
+    // =========================
+    // Export to Excel (unchanged behavior, updated fetch signature)
+    // =========================
+    async function exportToExcel() {
+      const selElitech = document.getElementById('elitechFilter').value;
+      if (!selElitech) {
+        alert('Silakan pilih Elitech terlebih dahulu sebelum mengekspor data.');
+        return;
+      }
+
+      const tempUrl = getSheetUrlForElitech(selElitech, 'temp');
+      const humUrl  = getSheetUrlForElitech(selElitech, 'hum');
+
+      if (!tempUrl && !humUrl) {
+        alert('Tidak ada link Google Sheet yang tersedia untuk Elitech ini.');
+        return;
+      }
+
+      const [tempRows, humRows] = await Promise.all([
+        tempUrl ? fetchGoogleSheetRows(tempUrl, { isHumSheet: false }) : Promise.resolve([]),
+        humUrl  ? fetchGoogleSheetRows(humUrl,  { isHumSheet: true  }) : Promise.resolve([])
+      ]);
+
+      if (!tempRows.length && !humRows.length) {
+        alert('Gagal memuat data dari Google Sheet. Periksa kembali link dan akses sheet.');
+        return;
+      }
+
       const workbook = XLSX.utils.book_new();
-      // Temperature sheet
-      const wsTemp = XLSX.utils.table_to_sheet(document.getElementById('tempTable'));
-      XLSX.utils.book_append_sheet(workbook, wsTemp, "Data Temperature");
-      // Humidity sheet
-      const wsHum = XLSX.utils.table_to_sheet(document.getElementById('humTable'));
-      XLSX.utils.book_append_sheet(workbook, wsHum, "Data Humidity");
-      // Save file
-      XLSX.writeFile(workbook, "Data_Logger_QC_Export.xlsx");
+
+      if (tempRows.length) {
+        const tempSheetData = tempRows.map(row => ({
+          Date: row.date,
+          Month: row.month,
+          Year: row.year,
+          Time: row.time,
+          Elitech: row.elitech,
+          'E+Elektronik': row.e_elektronik ?? '',
+          Temperature: row.temp ?? ''
+        }));
+        const wsTemp = XLSX.utils.json_to_sheet(tempSheetData);
+        XLSX.utils.book_append_sheet(workbook, wsTemp, 'Data Temperature');
+      }
+
+      if (humRows.length) {
+        const humSheetData = humRows.map(row => ({
+          Date: row.date,
+          Month: row.month,
+          Year: row.year,
+          Time: row.time,
+          Elitech: row.elitech,
+          'E+Elektronik': row.e_hum ?? '',
+          Humidity: row.hum ?? ''
+        }));
+        const wsHum = XLSX.utils.json_to_sheet(humSheetData);
+        XLSX.utils.book_append_sheet(workbook, wsHum, 'Data Humidity');
+      }
+
+      XLSX.writeFile(workbook, `Elitech-${selElitech}-Data-Export.xlsx`);
     }
 
-    // Initialize charts, calendar, and show Home by default
-    initCharts();
-    initCalendar();
-    switchView('home');
+    // =========================
+    // Bootstrap (MODIFIED): load scorecards early, then paint
+    // =========================
+    (async function bootstrap() {
+      initCharts();
+      initCalendar();
+      switchView('home');
+
+      try {
+        // Load scorecards immediately so Analytics shows values even with no Elitech selected.
+        await loadScorecardsFromSheets({ selElitechForRow: null });
+      } catch (err) {
+        console.warn('Scorecards failed to load (will use JS-computed fallback when data exists):', err);
+      }
+
+      // Paint initial state (scorecards can render even when Elitech is not selected).
+      updateDashboard();
+    })();
   </script>
 </body>
 </html>

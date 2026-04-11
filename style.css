@@ -206,7 +206,7 @@ select[multiple] {
   line-height: 1.6;
 }
 .card-guide {
-  flex: 1; /* Fill remaining vertical space */
+  flex: 1;
   background: linear-gradient(135deg, rgba(162, 187, 226, 0.6), rgba(200, 150, 180, 0.6));
 }
 
@@ -295,6 +295,22 @@ select[multiple] {
   position: relative;
   height: 250px;
   width: 100%;
+}
+
+/* NEW: empty-state overlay on charts */
+.chart-empty {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
 }
 
 /* Data tables */
